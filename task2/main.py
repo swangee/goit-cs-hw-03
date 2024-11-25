@@ -43,8 +43,14 @@ class CatsCLI(cmd.Cmd):
     prompt = '>> '
     intro = 'Welcome to CatsCLI. Type "help" for available commands.'
 
+    def do_exit(self):
+        """Exit from CatsCLI."""
+        print('Bye')
+
     def do_add_cats(self, line):
-        """Adds cat with random nickname."""
+        """
+        Adds two hardcoded cats to the database
+        """
 
         result_one = db.cats.insert_one(
             {
@@ -63,13 +69,24 @@ class CatsCLI(cmd.Cmd):
         )
 
     def do_get_cat(self, name):
+        """
+        Show information about a specific cat by its' name.
+        Example: get_cat Manny
+        """
         print(db.cats.find_one({"name": name}))
 
     def do_get_cats(self, line):
-        """Exit the CLI."""
+        """
+        Show list of all cats
+        Example: get_cats
+        """
         print(list(db.cats.find()))
 
     def do_set_age(self, line):
+        """
+        Sets the cats' name by its' name
+        Example: set_age Manny 10
+        """
         name, age = line.split(' ')
 
         res = db.cats.update_one({"name": name}, {"$set": {"age": int(age)}})
@@ -82,9 +99,11 @@ class CatsCLI(cmd.Cmd):
         print('age was updated', res)
 
     def do_add_feature(self, line):
+        """
+        Adds feature to a cat by its' name
+        Example: add_feature Manny fluffy
+        """
         name, feature = line.split(' ')
-
-        print(name, feature)
 
         res = db.cats.update_one({"name": name}, {"$addToSet": {"features": feature}})
 
@@ -96,12 +115,17 @@ class CatsCLI(cmd.Cmd):
         print('age was updated', res)
 
     def do_remove_cat(self, name):
-        """Removes cat by its' name"""
+        """
+        Removes cat by its' name
+        Example: remove_cat Manny
+        """
         db.cats.delete_one({"name": name})
         print('Cat was removed')
 
     def do_remove_all_cats(self, name):
-        """Removes all cats from the database"""
+        """
+        Removes all cats from the database
+        Example: remove_all_cats"""
         db.cats.delete_many({})
         print('Cats where removed')
 
